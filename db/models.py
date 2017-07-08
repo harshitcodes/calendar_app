@@ -27,6 +27,8 @@ class User(Base):
     id = Column(Integer, primary_key=True)
     email = Column(String(250), nullable=False)
     name = Column(String(250), nullable=False)
+    profile_pic = Column(String(250))
+    notes = relationship('Note', back_populates = "author")
 
     @property
     def serialize(self):
@@ -35,6 +37,7 @@ class User(Base):
             'id': self.id,
             'email': self.email,
             'name': self.name,
+            'picture': self.profile_pic,
         }
 
 class Note(Base):
@@ -42,5 +45,27 @@ class Note(Base):
     __tablename__ = 'note'
 
     id = Column(Integer, primary_key = True)
-    title = Column(String(250), nullable = False)
-    text = Column(TEXT, nullable = True)
+    timestamp = Column(DateTime, nullable = False)
+    date = Column(DateTime, nullable = False)
+    title = Column(TEXT, nullable = False)
+    text = Column(String(250))
+    author_id = Column(Integer, ForeignKey('user.id'), nullable = False)
+    author = relationship('User', back_populates = 'notes')
+    # shared_users = relationship('User', backref = "notes", single_parent = True, lazy = 'dynamic')
+
+    @property
+    def serialize(self):
+        return{
+            'timestamp': self.timestamp,
+            'note_id': self.id,
+            'title': self.title,
+            'text': self.text,
+            'author_id': self.author_id,
+            'user': self.user,
+        }
+
+
+if __name__ == '__main__':
+    from sqlalchemy import create_engine
+    engine = create_engine('sqlite:///calendar.db')
+    Base.metadata.create_all(engine)

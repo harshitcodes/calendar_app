@@ -1,0 +1,80 @@
+body{
+    background-color: #f6f6f6;
+}
+
+.category-list {
+    list-style-type: none;
+    color: #999999;
+    padding-left: 0;
+}
+/*navbar css =========================================================*/
+#my-nav{
+    background-color: #00796b;
+    background-image: none;
+    height : 70px;
+}
+
+#my-nav li a{
+    padding-top: 25px;
+    color: #fff;
+}
+
+/*home heading*/
+#home-heading{
+    background-color: #f6f6f6;
+}
+#create-post{
+    margin-top: 10px;
+    color: #00796b;
+    background-color: #00796b;
+    background-image: none;
+}
+#create-post a{
+    color: #fff;
+}
+/*posts links */
+.posts-links{
+    border: 1px solid #333;
+    padding: 5px 5px 5px 5px;
+    margin: 5px 5px 5px 5px;
+    height: 300px;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 6px 0 #333;
+}
+
+#bottom-bar{
+    background-color: #00796b;
+    height: 40px;
+    position: absolute;
+    bottom: 0px;
+    height: 70px;
+    left: 15px;
+    vertical-align: middle;
+    width: 100%;
+}
+
+#bottom-bar div{
+    margin-top: 25px;
+}
+.row a{
+    color: initial;
+}
+.btn{
+    background-image: none;
+    background-color: #00796b;
+    color: #fff!important;
+}
+.form-control{
+    width: 50%;
+}
+
+
+.category-list li{
+    border: 1px solid #00796b;
+    line-height: 2.2;
+    text-align: center;
+    background-color: #d6d4d0;
+    border-radius: 3px;
+    font-size: 22px;
+}
