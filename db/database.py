@@ -30,7 +30,7 @@ def addUser(email, name, pic_url, location):
 def addNote(title, description, date, user_id, shared_user_id):
     '''add a note to the db'''
     datetime_obj = datetime.strptime(date, '%b %d %Y %I:%M%p')
-    note = Note(timestamp=datetime.now(), title = title, text=description, date = datetime_obj, \
+    note = Note(timestamp=datetime.now(), title = title, text=description, date_time = datetime_obj, \
                 author_id=user_id, shared_users_id=shared_user_id
                 )
     session.add(note)

@@ -270,10 +270,16 @@ def sharedNote(note_id, user_email):
     timezone = ' '.join(pytz.country_timezones(shared_user.country_code))
     tz = pytz.timezone(timezone)
     print(tz)
-    dt = datetime(2002, 10, 27, 0, 30, tzinfo=tz).strftime(fmt)  # converting the timezone to shared_user's timezone
-    msg = Message("{} has shared a calprod note with you timed at {}".format(logged_in_user_id.name, dt),
-                  sender=logged_in_user_id.email,
-                  recipients=[user_email])
+    formatted_dt = datetime(note_to_share.date_time, tzinfo=tz).strftime(fmt)  # converting the timezone to shared_user's timezone
+    if(datetime.now() > dt):  # just to check if there the current time is greater than the scheduled time
+        msg = Message("{} has shared a calprod event which is live right now. Please join in.".format(logged_in_user_id.name),
+                      sender=logged_in_user_id.email,
+                      recipients=[user_email])
+    else:
+        msg = Message("{} has shared a calprod event which is scheduled at {}".format(logged_in_user_id.name, dt),
+                      sender=logged_in_user_id.email,
+                      recipients=[user_email])
+
 
     mail.send(msg)
 
@@ -297,6 +303,8 @@ def creatNote():
     if request.method == 'POST':
         # retreiving form value
         new_note_title = request.form['title'].title()
+
+
 
 
 

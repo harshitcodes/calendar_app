@@ -49,7 +49,7 @@ class Note(Base):
 
     id = Column(Integer, primary_key = True)
     timestamp = Column(DateTime, nullable = False)
-    date = Column(DateTime, nullable = False)
+    date_time = Column(DateTime, nullable = False)
     title = Column(TEXT, nullable = False)
     text = Column(String(250))
     author_id = Column(Integer, ForeignKey('user.id'), nullable = False)
