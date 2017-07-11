@@ -7,12 +7,14 @@ from datetime import datetime
 import random
 import string
 import json
+import pytz
 os.environ['OAUTHLIB_INSECURE_TRANSPORT'] = '1'
 
 # Flask modules/funct
 from flask import Flask, render_template, abort, request, redirect, url_for,\
                 jsonify, flash, make_response
 from flask import session as login_session
+from flask_mail import Mail, Message
 
 # Authentication modules/functions
 from oauth2client.client import flow_from_clientsecrets, FlowExchangeError
@@ -28,6 +30,7 @@ from db.models import Base, User, Note
 from flask import Flask
 app = Flask(__name__)
 
+mail = Mail(app)
 
 engine = create_engine('sqlite:///db/calendar.db')
 Base.metadata.bind = engine
@@ -242,6 +245,42 @@ def home():
     logged_in_user_id = getUserID(login_session.get('email'))
     print(logged_in_user_id)
     return render_template('home.html', logged_in_user_id = logged_in_user_id)
+
+
+def sharedNote(note_id, user_email):
+    """
+    Invites a user to a note
+    """
+    if 'email' not in login_session:
+        return redirect('/login')
+
+    logged_in_user_id = getUserID(login_session.get('email'))
+    note_to_share = session.query(Note).filter_by(id=note_id).first()
+
+    if note_to_share.user_id != logged_in_user_id:
+        flash('You are not authorised to perform this action!')
+        return redirect('/')
+
+    shared_user = session.query(User).filter_by(email=user_email).first()
+    note_to_share.shared_user_id = shared_user.id
+    session.add(note_to_share)
+    session.commit()
+    dt = note_to_share.datetime()
+    fmt = '%b %d %Y %I:%M%p'
+    timezone = ' '.join(pytz.country_timezones(shared_user.country_code))
+    tz = pytz.timezone(timezone)
+    print(tz)
+    dt = datetime(2002, 10, 27, 0, 30, tzinfo=tz).strftime(fmt)  # converting the timezone to shared_user's timezone
+    msg = Message("{} has shared a calprod note with you timed at {}".format(logged_in_user_id.name, dt),
+                  sender=logged_in_user_id.email,
+                  recipients=[user_email])
+
+    msg.html("The link to note : <a href = "localhost:8000/{{note_to_share.id}}">")
+    mail.send(msg)
+
+
+
+
 
 if __name__ == '__main__':
     app.secret_key = "thisismysupersecret"

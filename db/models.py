@@ -28,7 +28,9 @@ class User(Base):
     email = Column(String(250), nullable=False)
     name = Column(String(250), nullable=False)
     profile_pic = Column(String(250))
-    notes = relationship('Note', back_populates = "author")
+    country_code = Column(String(2), nullable = False)
+    # notes = relationship('Note', back_populates = "author")
+    # shared_notes = relationship('Note', back_populates = "shared_users")
 
     @property
     def serialize(self):
@@ -40,6 +42,7 @@ class User(Base):
             'picture': self.profile_pic,
         }
 
+
 class Note(Base):
 
     __tablename__ = 'note'
@@ -50,8 +53,9 @@ class Note(Base):
     title = Column(TEXT, nullable = False)
     text = Column(String(250))
     author_id = Column(Integer, ForeignKey('user.id'), nullable = False)
-    author = relationship('User', back_populates = 'notes')
-    # shared_users = relationship('User', backref = "notes", single_parent = True, lazy = 'dynamic')
+    shared_users_id = Column(Integer, ForeignKey('user.id'))
+    author = relationship('User', foreign_keys="Note.author_id")
+    shared_users = relationship('User', foreign_keys="Note.shared_users_id")
 
     @property
     def serialize(self):
