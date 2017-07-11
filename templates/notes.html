@@ -1,0 +1,13 @@
+{% extends 'base.html' %}
+{% block pagetitle %} My Notes {% endblock %}
+
+{% block content %}
+
+<ul>
+  {% for note in notes %}
+  <li> {{note.title}}</li>
+  <li> {{note.text}} </li>
+  {% endfor %}
+</ul>
+
+{% endblock %}

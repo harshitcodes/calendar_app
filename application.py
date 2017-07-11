@@ -275,8 +275,30 @@ def sharedNote(note_id, user_email):
                   sender=logged_in_user_id.email,
                   recipients=[user_email])
 
-    msg.html("The link to note : <a href = "localhost:8000/{{note_to_share.id}}">")
     mail.send(msg)
+
+
+@app.route('/notes')
+def shownotes():
+    if 'email' not in login_session:
+        return redirect('/login')
+
+    logged_in_user_id = getUserID(login_session.get('email'))
+    notes_of_user = session.query(Note).filter_by(author_id = logged_in_user_id).all()
+    return render_template('notes.html', notes = notes_of_user, logged_in_user_id = logged_in_user_id)
+
+
+@app.route('/creatnotes')
+def creatNote():
+    if 'email' not in login_session:
+        return redirect('/login')
+
+    logged_in_user_id = getUserID(login_session.get('email'))
+    if request.method == 'POST':
+        # retreiving form value
+        new_note_title = request.form['title'].title()
+
+
 
 
 
