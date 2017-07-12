@@ -203,6 +203,12 @@ def gdisconnect():
         response.headers['Content-Type'] = 'application/json'
         return response
 
+def checkLoginStatus():
+    if 'username' not in login_session:
+        return redirect('/login')
+    else:
+        return
+
 
 def createUser(current_login_session):
     """
@@ -240,19 +246,17 @@ def main():
 # @app.route('/home')
 @app.route('/')
 def home():
-    if 'username' not in login_session:
-        return redirect('/login')
+    checkLoginStatus()
     logged_in_user_id = getUserID(login_session.get('email'))
     print(logged_in_user_id)
     return render_template('home.html', logged_in_user_id = logged_in_user_id)
 
 
-def sharedNote(note_id, user_email):
+def shareNote(note_id, user_email):
     """
     Invites a user to a note
     """
-    if 'email' not in login_session:
-        return redirect('/login')
+    checkLoginStatus()
 
     logged_in_user_id = getUserID(login_session.get('email'))
     note_to_share = session.query(Note).filter_by(id=note_id).first()
@@ -286,30 +290,31 @@ def sharedNote(note_id, user_email):
 
 @app.route('/notes')
 def shownotes():
-    if 'email' not in login_session:
-        return redirect('/login')
+    checkLoginStatus()
 
     logged_in_user_id = getUserID(login_session.get('email'))
     notes_of_user = session.query(Note).filter_by(author_id = logged_in_user_id).all()
     return render_template('notes.html', notes = notes_of_user, logged_in_user_id = logged_in_user_id)
 
 
-@app.route('/creatnotes')
+@app.route('/createnotes')
 def creatNote():
-    if 'email' not in login_session:
-        return redirect('/login')
+    """
+    creates new notes for users
+    """
+    checkLoginStatus()
 
     logged_in_user_id = getUserID(login_session.get('email'))
     if request.method == 'POST':
         # retreiving form value
-        new_note_title = request.form['title'].title()
-
-
-
-
-
-
-
+        note = Note(title=request.form['title'],
+                    author_id=logged_in_user_id,
+                    text = request.form['text'],
+                    date_time = datetime.now(),
+                    timestamp = datetime.now())
+        session.add(note)
+        session.commit()
+        return redirect(url_for('shownotes'))
 
 
 if __name__ == '__main__':
