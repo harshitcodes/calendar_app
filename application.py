@@ -251,8 +251,22 @@ def home():
     print(logged_in_user_id)
     return render_template('home.html', logged_in_user_id = logged_in_user_id)
 
-
+@app.route('/share_note/<int:note_id>/<user_email>')
 def shareNote(note_id, user_email):
+    """
+    fires the action to the helper to invite to the user.
+    """
+    checkLoginStatus()
+    try:
+        shared_user_email = session.query(User).filter_by(email = user_email).first()
+        shareNoteHelper(note_id, shared_user_email)
+    except NoResultFound:
+        error = "No such user in database"
+        flash(error)
+
+
+
+def shareNoteHelper(note_id, user_email):
     """
     Invites a user to a note
     """

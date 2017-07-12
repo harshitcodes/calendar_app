@@ -18,9 +18,9 @@ session = DBSession()
 # methods to populate the Database
 
 
-def addUser(email, name, pic_url, location):
+def addUser(email, name, pic_url, code):
     '''add a user to the db'''
-    user = User(email=email, name=name, profile_pic=pic_url, location=location)
+    user = User(email=email, name=name, profile_pic=pic_url, country_code=code) 
     session.add(user)
     session.commit()
     print("added user: {}".format(user.id))

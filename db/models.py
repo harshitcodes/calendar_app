@@ -28,9 +28,7 @@ class User(Base):
     email = Column(String(250), nullable=False)
     name = Column(String(250), nullable=False)
     profile_pic = Column(String(250))
-    country_code = Column(String(2), nullable = False)
-    # notes = relationship('Note', back_populates = "author")
-    # shared_notes = relationship('Note', back_populates = "shared_users")
+    country_code = Column(String(2), nullable = False)  # to convert note datetime as per the shared_user timezone
 
     @property
     def serialize(self):
