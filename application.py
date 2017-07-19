@@ -304,9 +304,10 @@ def shareNoteHelper(note_id, user_email):
 
 @app.route('/notes')
 def shownotes():
-    checkLoginStatus()
+    print(checkLoginStatus())
 
     logged_in_user_id = getUserID(login_session.get('email'))
+    print(logged_in_user_id)
     notes_of_user = session.query(Note).filter_by(author_id = logged_in_user_id).all()
     return render_template('notes.html', notes = notes_of_user, logged_in_user_id = logged_in_user_id)
 

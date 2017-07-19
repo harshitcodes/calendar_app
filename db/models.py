@@ -28,7 +28,7 @@ class User(Base):
     email = Column(String(250), nullable=False)
     name = Column(String(250), nullable=False)
     profile_pic = Column(String(250))
-    country_code = Column(String(2), nullable = False)  # to convert note datetime as per the shared_user timezone
+    country_code = Column(String(2))  # to convert note datetime as per the shared_user timezone
 
     @property
     def serialize(self):
