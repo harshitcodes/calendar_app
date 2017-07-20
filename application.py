@@ -134,10 +134,13 @@ def gconnect():
     answer = requests.get(userinfo_url, params=params)
 
     data = answer.json()
+    print('===========================*******************')
+    print(data)
 
     login_session['username'] = data['name']
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
+    # print(login_session)
 
     # See if a user exists, if it doesn't make a new one
     user_id = getUserID(login_session['email'])
@@ -218,7 +221,8 @@ def createUser(current_login_session):
     """
     new_user = User(name=current_login_session['username'],
                     email=current_login_session['email'],
-                    profile_pic=current_login_session['picture'])
+                    profile_pic=current_login_session['picture']
+                    )
     session.add(new_user)
     session.commit()
     user = session.query(User).filter_by(
@@ -308,6 +312,7 @@ def shownotes():
 
     logged_in_user_id = getUserID(login_session.get('email'))
     print(logged_in_user_id)
+    print('-----------------------')
     notes_of_user = session.query(Note).filter_by(author_id = logged_in_user_id).all()
     return render_template('notes.html', notes = notes_of_user, logged_in_user_id = logged_in_user_id)
 
@@ -325,11 +330,12 @@ def creatNote():
         note = Note(title=request.form['title'],
                     author_id=logged_in_user_id,
                     text = request.form['text'],
-                    date_time = datetime.now(),
                     timestamp = datetime.now())
         session.add(note)
         session.commit()
         return redirect(url_for('shownotes'))
+    else:
+        return render_template('create_note.html', logged_in_user_id=logged_in_user_id)
 
 
 if __name__ == '__main__':

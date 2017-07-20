@@ -18,9 +18,9 @@ session = DBSession()
 # methods to populate the Database
 
 
-def addUser(email, name, pic_url, code):
+def addUser(email, name, pic_url):
     '''add a user to the db'''
-    user = User(email=email, name=name, profile_pic=pic_url, country_code=code) 
+    user = User(email=email, name=name, profile_pic=pic_url)
     session.add(user)
     session.commit()
     print("added user: {}".format(user.id))
@@ -30,7 +30,7 @@ def addUser(email, name, pic_url, code):
 def addNote(title, description, date, user_id, shared_user_id):
     '''add a note to the db'''
     datetime_obj = datetime.strptime(date, '%b %d %Y %I:%M%p')
-    note = Note(timestamp=datetime.now(), title = title, text=description, date_time = datetime_obj, \
+    note = Note(timestamp=datetime.now(), title = title, text=description, \
                 author_id=user_id, shared_users_id=shared_user_id
                 )
     session.add(note)
@@ -46,8 +46,8 @@ print('deleted all data in db')
 print()
 
 # add test user
-user1 = addUser('test@test.com', 'Test', 'test.png', 'Boston')
-user2 = addUser('test2@test.com', 'Test2', 'test2.png', 'New Delhi')
+user1 = addUser('test@test.com', 'Test', 'test.png')
+user2 = addUser('test2@test.com', 'Test2', 'test2.png')
 # print(user1.id  "added")
 
 
